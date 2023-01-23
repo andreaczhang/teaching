@@ -1,0 +1,1330 @@
+\documentclass[compress, notes=hide]{beamer}
+%\documentclass[compress, notes=hide,handout]{beamer}
+
+\usepackage[english,norsk]{babel} %norske navn rundt omkring
+\usepackage{lmodern}
+\usepackage[T1]{fontenc} %Norsk tegnsetting (���)
+\usepackage[latin1]{inputenc} %Norsk tegnsetting
+\usepackage{amsmath,amsfonts,amssymb,mathrsfs} %matematikksymboler
+\usepackage{algorithm, algorithmic}
+\usepackage{amsthm} %for � lage teoremer og lignende.
+\usepackage{bm} %fikser bold math-problematikken
+%\usepackage[hang]{subfigure} %hvis du vil kunne ha flere figurer inni en figur
+%\usepackage[small,bf,hang]{caption} %bestemmer format p� figurtekst
+\usepackage{multirow}
+\usepackage{graphpap}
+\usepackage{pgf} %Tegning
+\def\pgfex{ex}
+%\usepackage{mathptmx}
+%\usepackage{helvet}
+%\usepackage{verbatim}
+
+\setbeamertemplate{caption}[]
+\setbeamertemplate{navigation symbols}{}
+%\setbeamertemplate{footline}[page number]
+\setbeamertemplate{footline}[frame number]
+%\setbeamertemplate{caption}[numbered] 
+\usecolortheme{default}
+%\usetheme{Pittsburgh} %\usetheme{Singapore}
+\setbeamertemplate{itemize item}[circle] %triangel p� 2-level-itemize (for 1-level brukt {itemize item})
+\setbeamertemplate{itemize subitem}[triangle] %triangel p� 2-level-itemize (for 1-level brukt {itemize item})
+\setbeamertemplate{section in toc}[circle]{} %Nummer i table of content
+\setbeamertemplate{enumerate items}[circle] 
+\setbeamertemplate{itemize subitem}[triangle] %triangel p� 2-level-itemize (for 1-level brukt {itemize item})
+\setbeamercolor{itemize subitem}{fg=gray} %farge bullets
+
+% For � skrive i default bl� farge:
+% \textcolor[rgb]{0.2,0.2,0.7}{Blablabla-tekst}
+%\newcommand{\hl}[1]{\textcolor[rgb]{0.2,0.2,0.7}{\emph{#1}}}
+\newcommand{\hl}[1]{\textbf{#1}}
+\newcommand{\hlb}[1]{\textcolor[rgb]{0.2,0.2,0.7}{#1}}
+\newcommand{\sectionheader}{
+    \usebeamerfont*{section number projected}%
+    \usebeamercolor{section number projected}%
+    \begin{pgfpicture}{-1ex}{-0.4ex}{1ex}{2ex}
+      \color{bg}
+      \pgfpathcircle{\pgfpoint{0pt}{.75ex}}{1.2ex}
+      \pgfusepath{fill}
+      \pgftext[base]{\color{fg}\thesection}
+    \end{pgfpicture}\kern1.25ex
+   \usebeamercolor[bg]{item projected}
+    \Large{\insertsectionhead}
+}
+
+% FOR ? SKRIVE I DEFAULT, BL? FARGE:       \textcolor[rgb]{0.2,0.2,0.7}{Blablabla-tekst}
+
+\title{Analysis of proportions} 
+\author{Chi Zhang\\
+\footnotesize{Oslo Center for Biostatistics and Epidemiology}\\
+\footnotesize{Department of Biostatistics, UiO}\\
+\footnotesize{chi.zhang@medisin.uio.no}}
+\date{MF9130 -- Introductory Course in Statistics\\
+02.02.2023}
+
+
+\setbeamertemplate{navigation symbols}{}
+%\setbeamertemplate{footline}[page number]
+\setbeamertemplate{footline}[frame number]
+\usecolortheme{default}
+%\setbeamertemplate{background}[grid][step=0.25cm]%Rutenett
+
+\begin{document}
+
+\section{Title page}
+
+\frame{\titlepage}
+
+\section{Overview}
+
+\frame{ 
+\frametitle{Overview}
+  \begin{block}{Aalen chapter 6.1-6.4, Kirkwood and Sterne chapter 14-16}
+    \begin{itemize}
+    \item \hl{Proportions} and the binomial distribution  \textcolor{red}{30m}
+    \item Testing a hypothesis about one proportion \textcolor{red}{20m}
+    \item Two proportions and $2 \times 2$ contingency table  \textcolor{red}{15m}
+    \item Comparing two proportions \textcolor{red}{45m}
+    \begin{itemize}
+    \item Risk difference
+    \item \hl{Relative risk}
+    \item \hl{Odds ratio}
+    \end{itemize}
+    \end{itemize}
+  \end{block}
+}
+
+\frame{ 
+\frametitle{}
+  \begin{block}{Previous lecture:}
+    \begin{itemize}
+    \item Analysis of \hl{continuous data}: data measured on a continuous
+      scale
+    \item Used t-tests to test for differences between groups
+    \end{itemize}
+  \end{block}
+  \begin{block}{This lecture:}
+    \begin{itemize}
+    \item Binary outcome, proportions
+    \item Testing of proportions for one group
+    \item Proportions in two groups: exposure and outcome
+    \item Odds ratio and relative risk
+    \end{itemize}
+  \end{block}
+}
+
+\section{Proportions and the binomial distribution}
+
+% ----- binary outcomes and proportions ------
+
+\frame{ 
+\frametitle{Binary outcome and proportion}
+ \begin{block}{Risk}
+    \begin{itemize}
+    \item Let the two possible outcomes of a binary variable be
+      labelled by \hl{D (disease)} and \hl{H (healthy)}
+    \item We want to study the \hl{probability} or \hl{risk},
+      $\pi$, that D occurs in the population
+    \end{itemize}
+  \end{block}
+
+\textcolor{red}{motivating example, importance of this topic}
+}
+
+
+\frame{ 
+	\frametitle{}
+	\begin{block}{What are we interested in?}
+		\begin{itemize}
+			\item 	\textcolor{red}{whether a proportion equals a certain value, with uncertainty. example questions}
+			\item 	\textcolor{red}{whether proportions from two groups equal (e.g. exposure 1 and 2)}
+			\item 	\textcolor{red}{association between exposure and outcome}
+		\end{itemize}
+	\end{block}
+	
+
+}
+
+
+
+\frame{ 
+	\frametitle{Sampling distribution of a proportion}
+	\begin{block}{Sample proportion}
+		\begin{itemize}
+			\item The \hl{sample proportion} $\bm{p}$ is defined as the
+			\emph{proportion} of individuals in the sample in category D:
+			\begin{equation}
+				p = \frac{d}{n},\nonumber
+			\end{equation}
+			where $d$ is the number of subjects who experience the event of
+			interest, and $n$ is the total number in the sample
+			\item $p$ is used to estimate the probability or \hl{risk} that
+			an individual in the \emph{population} as a whole will be in
+			category D rather than H
+			\textcolor{red}{rephrase}
+		\end{itemize}
+	\end{block}
+}
+
+ \begin{frame}
+	\begin{block}{Example: 15.1 in Kirkwood \& Sterne}
+		In a trial of a new vaccine, 23 of 1000 children vaccinated showed
+		signs of adverse reactions (such as fever or signs of irritability)
+		within 24 hours of vaccination. The \hl{sample proportion}
+		exhibiting an adverse reaction was therefore:
+		\begin{equation*}
+			p = \frac{23}{1000} = 0.023.
+		\end{equation*}
+		This means that the vaccine is associated with an estimated 2.3\% risk of adverse reactions
+	\end{block}
+\end{frame}
+
+
+
+
+%% \begin{frame}
+%% \begin{block}{Sampling distribution of a proportion}
+%% \begin{itemize}
+%% \item Due to \hl{sampling variation}, the various proportions from
+%%    repeated independent sampling will differ. 
+%%  \item The \hl{sampling distribution} of a proportion is called the
+%%    \hl{binomial distribution} and can be calculated from:
+%% \begin{itemize}
+%% \item{the sample size $n$, and}
+%% \item{the population proportion $\pi$,}
+%% \end{itemize}
+%% where $\pi$ is the probability that the outcome for an arbitrary
+%% individual in the population is D
+%% \item Note that, although $p$ is a fraction, its sampling distribution
+%%   is \emph{discrete} and not continuous, since it may take only a
+%%   limited number of values for any given sample size
+%% \end{itemize}
+%% \end{block}
+%% \end{frame}
+%%
+%% \begin{frame}
+%% \begin{block}{Example: 15.2 in Kirkwood \& Sterne} 
+%%   In a family of four children both parents have the \hl{sickle
+%%     cell trait} (AS), that is, heterozygous for the sickle cell (S)
+%%   and normal (A) haemoglobin genes. We want to calculate the
+%%   probabilities that none, one, two, three and four of the children
+%%   have sickle cell disease (SS). For each child we have that:
+%% \begin{itemize}
+%% \item{the \hl{probability} of being SS, $\pi$, is 0.25, and}
+%% \item{the \hl{probability} of \emph{not} being SS, $(1-\pi)$, is 0.75.}
+%% \end{itemize}
+%% In this case \hl{category D} corresponds to being SS, and
+%% \hl{category H} corresponds to not being SS
+%%  \end{block}
+%%  \end{frame}
+
+%% \begin{frame}
+%% \begin{block}{} 
+%%   The \hl{probability} that \emph{none} of the children are SS is:
+%% \begin{equation*}
+%% \mathrm{Prob}(d=0) =  1 \times 0.75 \times 0.75 \times 0.75 \times 0.75 = 0.3164,
+%% \end{equation*}
+%% where 1 is the integer that corresponds to the number of ways this combination could occur. The \hl{probability} that exactly \emph{one} child is SS is:
+%% \begin{equation*}
+%% \mathrm{Prob}(d=1) = 4 \times 0.25 \times 0.75 \times 0.75 \times 0.75 = 0.4219,
+%% \end{equation*}
+%% where 4 is the integer that corresponds to the number of ways this combination could occur
+%% \end{block}
+%% \end{frame}
+
+%% \begin{frame}
+%% \begin{block}{}
+%% The \hl{probability} that exactly \emph{two} children are SS is:
+%% \begin{equation*}
+%% \mathrm{Prob}(d=2) = 6 \times 0.25 \times 0.25 \times 0.75 \times 0.75 = 0.2109,
+%% \end{equation*}
+%% where 6 is the integer that corresponds to the number of ways this combination could occur. The \hl{probability} that exactly \emph{three} children are SS is:
+%% \begin{equation*}
+%% \mathrm{Prob}(d=3) = 4 \times 0.25 \times 0.25 \times 0.25 \times 0.75 = 0.0469,
+%% \end{equation*}
+%% where 4 is the integer that corresponds to the number of ways this combination could occur
+%% \end{block}
+%% \end{frame}
+
+%% \begin{frame}
+%% \begin{block}{}
+%% The \hl{probability} that \emph{all} of the children are SS is:
+%% \begin{equation*}
+%% \mathrm{Prob}(d=4) = 1 \times 0.25 \times 0.25 \times 0.25 \times 0.25 = 0.0039,
+%% \end{equation*}
+%% where 1 is the integer that corresponds to the number of ways this combination could occur
+%% \end{block}
+%% \end{frame}
+
+%% \begin{frame}
+%% \begin{figure}
+%% \begin{picture}(150,150)
+%% \put(0,0){\framebox(150,150)}
+%% \put(90,15){\makebox(0,0){\tiny $p$}}
+%% \put(15,90){\rotatebox{90}{\makebox(0,0){\tiny probability}}}
+%% \put(40,40){\line(1,0){100}}
+%% \put(40,40){\line(0,1){100}}
+%% \put(50,30){\makebox(0,0){\tiny 0}}
+%% \put(70,30){\makebox(0,0){\tiny 0.25}}
+%% \put(90,30){\makebox(0,0){\tiny 0.5}}
+%% \put(110,30){\makebox(0,0){\tiny 0.75}}
+%% \put(130,30){\makebox(0,0){\tiny 1}}
+%% \put(38,40){\line(1,0){4}}
+%% \put(30,40){\makebox(0,0){\tiny 0}}
+%% \put(38,50){\line(1,0){4}}
+%% \put(38,60){\line(1,0){4}}
+%% \put(30,60){\makebox(0,0){\tiny 0.1}}
+%% \put(38,70){\line(1,0){4}}
+%% \put(38,80){\line(1,0){4}}
+%% \put(30,80){\makebox(0,0){\tiny 0.2}}
+%% \put(38,90){\line(1,0){4}}
+%% \put(38,100){\line(1,0){4}}
+%% \put(30,100){\makebox(0,0){\tiny 0.3}}
+%% \put(38,110){\line(1,0){4}}
+%% \put(38,120){\line(1,0){4}}
+%% \put(30,120){\makebox(0,0){\tiny 0.4}}
+%% \put(38,130){\line(1,0){4}}
+%% \put(38,140){\line(1,0){4}}
+%% \put(30,140){\makebox(0,0){\tiny 0.5}}
+%% \put(50,40){\thicklines{\line(0,1){63.28}}}
+%% \put(70,40){\thicklines{\line(0,1){84.38}}}
+%% \put(90,40){\thicklines{\line(0,1){42.18}}}
+%% \put(110,40){\thicklines{\line(0,1){9.38}}}
+%% \put(130,40){\thicklines{\line(0,1){0.78}}}
+%% \end{picture}
+%% \caption{Sampling distribution of a proportion, $p$, with population probability $\pi=0.25$ and sample size $n=4$}
+%% \end{figure}
+%% \end{frame}
+
+\begin{frame}
+	\begin{block}{Sample proportion is uncertain}
+		\begin{itemize}
+			\item If select another group of samples, the proportion might be different. 
+			\item Need to estimate the population proportion by sample proportion \textcolor{red}{verify if this is correct}
+			\item \textcolor{red}{distinguish the uncertainty of sample and population proportion, and uncertainty with them}
+		\end{itemize}	
+		
+	\end{block}	
+	
+	\begin{block}{Recall binomial distribution}
+		A proportion can be seen as the probability of getting exactly $d$ events in a sample of $n$.
+		
+		\begin{itemize}
+			\item Independent experiments
+			\item \hl{Two outcomes}: success or not (1, 0)
+			\item Probability of success is the same in all experiments
+			\item Probability of success + probability of no success = 1
+			\item The \hl{sampling distribution of a proportion} is the binomial distribution
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+
+
+% ----- binomial distribution ----
+
+\begin{frame}
+	\begin{block}{Binomial distribution (revisited)}
+		Let $\pi$ be the population probability (proportion) of the event of interest D (e.g. a adverse reaction from vaccination), and let $n$ be the sample size
+		
+		\begin{itemize}
+			\item The probability of getting exact $d$ events is 
+			\begin{equation}
+				P(\text{$d$ events}) = \binom{n}{d}  \pi^d  (1 - \pi)^{n-d},\nonumber
+			\end{equation}
+			
+			\item We wish to estimate $\pi$ using $p$
+			\item and quantify the uncertainty: how far is $p$ from the true, unknown $\pi$.
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+
+
+
+% ----- mean, se of a proportion ----
+
+\begin{frame}
+	\begin{block}{Mean and standard error of a proportion}
+		\begin{itemize}
+			\item \textcolor{red}{mean}
+			\item The \hl{standard error} of the proportion of D's in a sample is:
+			\begin{equation}
+				\text{s.e.} = \sqrt{ \frac{\pi (1 - \pi)}{n}},\nonumber
+			\end{equation}
+			where $n$ is the sample size. It measures how closely the sample
+			proportion estimates the population proportion
+			\item The standard error is estimated by:
+			\begin{equation}
+				\widehat{\text{s.e.}} = \sqrt{ \frac{p (1 - p)}{n}},\nonumber
+			\end{equation}
+			with $\pi$ replaced by $p$
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+
+% CI ----- 
+
+\begin{frame}
+\begin{block}{Confidence interval for a proportion}
+\begin{itemize}
+	\item When the sample size, $n$, increases, the binomial distribution
+	can be approximated by a \hl{normal distribution} with the same
+	mean and standard error as for the binomial distribution (The approximation is valid when both $n \times	\pi$ and $n \times (1 - \pi)$ is greater than or equal to 10)
+	\item The \hl{confidence interval for the population probability}, $\pi$, is
+\begin{equation}
+\text{CI} = \left( p - z' \times \sqrt{\frac{p(1-p)}{n}},p + z' \times \sqrt{\frac{p(1-p)}{n}} \right),\nonumber
+\end{equation}
+where $z'$ is the appropriate percentage point of the standard normal
+distribution (typically 1.96), $n$ is the sample size, and $p$ is the
+sample proportion
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+
+% -------- example 15.3 -------
+
+\begin{frame}
+\begin{block}{Example: 15.3 in Kirkwood \& Sterne}
+  In September 2001 a survey of \hl{smoking habits} was conducted
+  in a sample of 1000 teenagers aged 15-16, selected at random from
+  all 15-16 year-olds living in Birmingham, UK. A total of 123
+  reported that they were current smokers. 
+  
+  What is the proportion of smokers, and what is the standard error of the proportion?
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{}
+  Thus the \hl{proportion} of current smokers is estimated by
+\begin{equation*}
+p = \frac{123}{1000} = 0.123 = 12.3\%
+\end{equation*}
+The \hl{standard error} of $p$ is estimated by:
+\begin{equation*}
+\widehat{\text{s.e.}} = \sqrt{ \frac{0.123 \times (1-0.123)}{1000} } = 0.0104
+\end{equation*}
+
+\textcolor{red}{clarify what we are trying to estimate: p or pi}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{}
+  Thus the 95\% \hl{confidence interval} for the population
+  probability is:
+\begin{align*}
+\text{95\% CI} & = (0.123 - 1.96 \times 0.0104,0.123 + 1.96 \times 0.0104) \\
+& = (0.103,0.143)
+\end{align*}
+This means that with 95\% confidence, in September 2001 the proportion
+of 15-16 year-olds living in Birmingham who smoked was between 10.3\%
+and 14.3\%
+\end{block}
+\end{frame}
+
+
+
+% --------- test a hypothesis: one proportion --------
+
+\section{Testing a hypothesis about one proportion}
+
+\frame{ 
+\frametitle{Hypothesis testing about one proportion}
+\begin{block}{Hypothesis testing}
+\begin{itemize}
+	
+	\item \textcolor{red}{a reminder of HT, what is the purpose, why do we need it even after we have the interval estimation for the proportion}
+
+	\item \textcolor{red}{typical workflow: form a hypo, compute test statistic, ...}
+
+\end{itemize}
+
+We perform a $z$-test using the approximating normal distribution
+\end{block}
+}
+
+\begin{frame}
+\frametitle{Hypothesis testing about one proportion}
+\begin{block}{$z$-test for proportion}
+	
+	We want to test the \hl{null hypothesis that the population proportion
+		equals a particular value}, $\pi_0$:
+	\begin{equation}
+		\mathrm{H}_0: \pi = \pi_0, \mathrm{H}_a: \pi \neq \pi_0,\nonumber
+	\end{equation}
+
+Providing that both $n \times \pi_0$ and $n \times (1-\pi_0)$
+are greater than or equal to 10, the \hl{test statistic}
+\begin{equation}
+	z = \frac{p - \pi_0}{\sqrt{\pi_0 (1-\pi_0)/n}} \nonumber
+\end{equation}
+is \hl{standard normally distributed}.
+
+From the test statistic we derive a corresponding
+\hl{$P$-value}, which is the probability that $\pi = \pi_0$ (or
+something more extreme) \textcolor{red}{refine p-val, how to get it}
+
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Example: 15.3 in Kirkwood \& Sterne}
+  In 1998 the UK Government announced a target of \hl{reducing
+    smoking among children} from the national average of 13\% to 9\%
+  or less by the year 2010, with a fall to 11\% by the year 2005. Is
+  there evidence that the proportion of 15-16 year-old smokers in
+  Birmingham at the time of our survey in 2001 was below the national
+  average of 13\% at the time the target was set?
+  
+  \vspace{0.2cm}
+  
+  In the survey: 123 reported smokers among 1000 teenagers. 
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{}
+	The sample proportion $p = 0.123$. 
+	\vspace{0.2cm}
+	
+  The \hl{null hypothesis} states that the population proportion is
+  equal to 0.13 (13\%):
+\begin{equation*}
+\mathrm{H}_0: \quad \pi = \pi_0 = 0.13.
+\end{equation*}
+The \hl{standard error} of the sample proportion, $p$, under the
+null hypothesis is:
+\begin{equation*}
+\text{s.e} = \sqrt{ \frac{0.13 \times (1 - 0.13)}{1000} } = 0.106
+\end{equation*}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{}
+The observed value of the \hl{test statistic} is therefore:
+\begin{equation*}
+z = \frac{p - \pi_0}{\text{s.e}} =  \frac{0.123 - 0.13}{0.106} = -0.658
+\end{equation*}
+with a corresponding (one-sided) \hl{$\bm{P}$-value} equal to 0.255. \textcolor{red}{how to get it}
+
+
+This means that there is \textbf{no evidence} that the proportion of teenage smokers
+in Birmingham in September 2001 was lower than the national 1998.
+levels
+\end{block}
+\end{frame}
+
+
+
+
+
+% --------- two proportions --------
+
+\section{Comparing two proportions}
+
+\begin{frame}
+  \frametitle{Comparing two proportions}
+  We want to compare the proportions of a \textbf{binary outcome} in two groups. Such \textbf{outcomes} could be whether getting a disease, or whether a drug is effective. 
+  
+  \textcolor{red}{by comparing the proportions we can identify which groups is more prone to ... or explore association.}
+\begin{block}{Exposure}
+\begin{itemize}
+ \item Exposed / unexposed to a \textbf{risk factor}: sex (men and women), drug (treatment or placebo), ...   \textcolor{red}{risk factor might not be the best term here}
+
+
+\item \hl{Group 1} denote individuals \emph{exposed} to a
+  certain risk factor
+  
+  \item \hl{Group 0} denote those \emph{unexposed}
+  
+\item In clinical trials, these two groups would typically be the \hl{treatment} group and the \hl{control} (or placebo) group
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+
+
+% ---- contingency table -----
+\begin{frame}
+	\frametitle{Comparing two proportions} 
+	\begin{block}{$2 \times 2$ contingency table}
+		Individuals are classified according to their\textbf{ exposure} and \textbf{outcome }categories, and the counts can be displayed in a $2 \times 2$ table.
+		
+		\begin{itemize}
+			\item $d_1, d_0$ are the number of subjects in group 1 (exposed) and group 0 (unexposed), who experienced the outcome, 
+			\item $h_1, h_0$ are those who did not experience the outcome.
+		\end{itemize}	
+	
+				\begin{table}
+			\begin{tiny}
+				\begin{tabular}{lccc}
+					\hline
+					& \multicolumn{2}{c}{\textbf{Outcome}} &
+					\\
+					\cline{2-3}
+					& \textbf{Experienced event:} & \textbf{Did not experience event:} &
+					\\
+					\textbf{Exposure} & \textbf{D (Disease)} & \textbf{H (Healthy)} & \textbf{Total}
+					\\
+					\hline
+					\textbf{Group 1 (exposed)} & $d_1$ ($d_1/n_1 \times 100\%$) & $h_1$ ($h_1/n_1 \times 100\%$) & $n_1$ (100\%)
+					\\
+					\textbf{Group 0 (unexposed)} & $d_0$ ($d_0/n_0 \times 100\%$) & $h_0$ ($h_0/n_0 \times 100\%$) & $n_0$ (100\%)
+					\\
+					\hline
+					\textbf{Total} & $d$ & $h$ & $n$
+					\\
+					\hline
+				\end{tabular}
+			\end{tiny}
+		\end{table}
+		
+	\end{block}
+\end{frame}
+
+
+
+
+% ----- example 16.1 ----- 
+\begin{frame}
+\begin{block}{Example: 16.1 in Kirkwood \& Sterne}
+  We consider the results from an \hl{influenza vaccine trial}
+  carried out during an epidemic. 
+
+	\vspace{0.2cm}
+	
+  Of $n=460$ adults who took part, $n_1=240$ received \hl{influenza
+    vaccination} and $n_0=220$ received \hl{placebo
+    vaccination}. Overall $d=100$ people contracted influenza, of whom
+  $d_1=20$ were in the vaccine group and $d_0=80$ in the placebo
+  group. 
+
+The results are displayed in a $2 \times 2$ table.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{} 
+\begin{table}
+\begin{small}
+\begin{tabular}{lccc}
+\hline
+& \multicolumn{2}{c}{\textbf{Influenza}} &
+\\
+\cline{2-3}
+& \textbf{Yes} & \textbf{No} & \textbf{Total}
+\\
+\hline
+\textbf{Vaccine} & 20 (8.3\%) & 220 (91.7\%) & 240 (100\%)
+\\
+\textbf{Placebo} & 80 (36.4\%) & 140 (63.6\%) & 220 (100\%)
+\\
+\hline
+\textbf{Total} & 100 (21.7\%) & 360 (78.3\%) & 460 (100\%)
+\\
+\hline
+\end{tabular}
+\end{small}
+\end{table}
+The \hl{overall proportion} of subjects in the sample who
+got influenza is
+\begin{equation*}
+p = \frac{100}{460} = 0.217 = 21.7\%
+\end{equation*}
+The percentage getting influenza was much lower in the
+vaccine group (8.3\%) than in the placebo group (36.4\%)
+\end{block}
+\end{frame}
+
+
+
+
+% -------- compare two proportions -------
+\begin{frame}
+	\begin{block}{Comparing two proportions}
+		\begin{itemize}
+			\item There are three different common measures for comparing the
+			outcome between the two groups:
+			\begin{itemize}
+				\item{\hl{Risk difference}}
+				\item{Risk ratio, or \hl{relative risk}}
+				\item{\hl{Odds ratio}}
+			\end{itemize}
+			\item For each of these measures we  can calculate a \hl{confidence
+				interval} and carry out a \hl{hypothesis test}
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+
+
+% ---- risk difference ------
+\begin{frame}
+	  \frametitle{Risk difference} 
+\begin{block}{Risk difference}
+\begin{itemize}
+\item The \hl{risk difference} $RD$ is a
+  measure of the difference in risk, $\pi_1 - \pi_0$, between the
+  exposed and unexposed groups in the population
+\item It is estimated by
+\begin{equation}
+\widehat{\mathrm{RD}} = p_1 - p_0\nonumber
+\end{equation}
+\item Providing that
+\begin{itemize}
+\item{$n_1 \times p_1 \geqslant 10$ and $n_1 \times (1 - p_1) \geqslant 10$ in the exposed group, and}
+\item{$n_0 \times p_0 \geqslant 10$ and $n_0 \times (1 - p_0) \geqslant 10$ in the unexposed group}
+\end{itemize}
+we use a \hl{normal approximation} to the sampling distribution of
+$p_1-p_0$
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+		  \frametitle{Risk difference} 
+\begin{block}{}
+\begin{itemize}
+\item The \hl{standard error} of the sample difference is
+\begin{align}
+\mathrm{s.e.}(p_1 - p_0) & = \sqrt{\mathrm{s.e.}(p_1)^2 + \mathrm{s.e.}(p_0)^2} \notag \\
+& =  \sqrt{\frac{\pi_1  (1 - \pi_1)}{n_1} + \frac{\pi_0  (1 - \pi_0)}{n_0}},\nonumber
+\end{align}
+where $\mathrm{s.e.}(p_1)$ and $\mathrm{s.e.}(p_0)$ are the standard
+errors of the proportions in the exposed and unexposed groups
+respectively
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+		  \frametitle{Risk difference} 
+\begin{block}{The confidence interval for the difference between two proportions}
+\begin{itemize}
+\item The \hl{confidence interval} for the difference between two
+  proportions is given by
+\begin{equation}
+\mathrm{CI} = (p_1 - p_0) \pm z' \times \mathrm{s.e.}(p_1 - p_0),\nonumber
+\end{equation}
+where $z'$ is the appropriate percentage point of the standard normal distribution
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+% ------ example 16.1 ----
+\begin{frame}
+\begin{block}{Example: 16.1 in Kirkwood \& Sterne}
+The estimated \hl{risk difference} between the vaccine and placebo groups is:
+\begin{equation*}
+\widehat{\mathrm{RD}} = 0.083 - 0.364 = -0.281.
+\end{equation*} 
+Its estimated \hl{standard error} is
+\begin{align*}
+\widehat{\mathrm{s.e.}}(p_1-p_0) & = \sqrt{\frac{0.083 \times (1 - 0.083)}{240} + \frac{0.364 \times (1 - 0.364)}{220}} \\
+& = 0.037.
+\end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{} 
+  The approximate 95\% \hl{confidence interval} for this reduction
+  is:
+\begin{align*}
+\text{95\% CI} & = (-0.281 - 1.96 \times 0.037,-0.281 + 1.96 \times 0.037) \\
+& = (-0.353,-0.208).
+\end{align*}
+This means that we are 95\% confident that in the population the
+vaccine would reduce the risk of contracting influenza by between
+20.8\% and 35.3\%.
+\end{block}
+\end{frame}
+
+%% \begin{frame}
+%% \begin{block}{Test for the difference between two proportions}
+%% \begin{itemize}
+%% \item We want to test the \hl{null hypothesis} that the difference
+%%   between two population proportions is zero:
+%% \begin{equation}
+%% \mathrm{H}_0: \pi_1 = \pi_0 = \pi.
+%% \end{equation}
+%% \item Under the null hypothesis the \hl{standard error} of the
+%%   difference between the sample proportions is
+%% \begin{equation}
+%% \mathrm{s.e.}(p_1 - p_0) = \sqrt{ \pi \times (1 - \pi) \times \left( \frac{1}{n_1} + \frac{1}{n_0} \right)},
+%% \end{equation}
+%% where $\pi$ is the overall population proportion
+%% \end{itemize}
+%% \end{block}
+%% \end{frame}
+
+%% \begin{frame}
+%% \begin{block}{}
+%% \begin{itemize}
+%% \item The common population risk, $\pi$, is estimated by the
+%%   \hl{overall proportion} in both samples:
+%% \begin{equation}
+%% p = \frac{d}{n} = \frac{d_1 + d_0}{n_1 + n_0}
+%% \end{equation}
+%% \item Then the \hl{test statistic} for the z-test is
+%% \begin{equation}
+%% z = \frac{p_1 - p_0}{\sqrt{p \times (1 - p) \times (1/n_1 + 1/n_0)}},
+%% \end{equation}
+%% which is standard normally distributed under the null hypothesis. Its
+%% corresponding \hl{$P$-value} is reported by a computer or found in
+%% a table for the standard normal distribution
+%% \end{itemize}
+%% \end{block}
+%% \end{frame}
+
+%% \begin{frame}
+%% \begin{block}{Test validity}
+%% \begin{itemize}
+%% \item This test is a valid approximation provided that either
+%%  \begin{itemize}
+%% \item{$n_1 + n_0 > 40$, or}
+%% \item{$n_1 \times p$, $n_1 \times (1 - p)$, $n_0 \times p$ and $n_0 \times (1 - p)$ are all 10 or more}
+%% \end{itemize}
+%% \item If neither of these two conditions are satisfied, but $n_1
+%%   \times p$, $n_1 \times (1 - p)$, $n_0 \times p$ and $n_0 \times (1 -
+%%   p)$ are all 5 or more, then we use
+%% \begin{itemize}
+%% \item{a modified version of the \hl{$z$-test} incorporating a \hl{continuity correction}, or}
+%% \item{a \hl{chi-squared test} with a \hl{continuity correction}}
+%% \end{itemize}
+%% \item If none of these conditions are satisfied, we use the
+%%   \hl{exact test}
+%% \end{itemize}
+%% \end{block}
+%% \end{frame}
+
+%% \begin{frame}
+%% \begin{block}{Example: 16.1 in Kirkwood \& Sterne} 
+%%   The \hl{overall proportion} that contracted influenza was:
+%% \begin{equation*}
+%% p = \frac{100}{460} = 0.217 = 21.7\%.
+%% \end{equation*}
+%% Therefore the \hl{test statistic} is:
+%% \begin{align*}
+%% z & = \frac{0.083 - 0.364}{\sqrt{0.217 \times (1 - 0.217) \times (1/240 + 1/220)}} \\
+%% & = \frac{-0.281}{0.0385} \\
+%% & = -7.299. 
+%% \end{align*}
+%% The corresponding \hl{$P$-value} is < 0.0001 $\rightarrow$ reject $H_0$
+%% \end{block}
+%% \end{frame}
+
+
+
+\begin{frame}
+		  \frametitle{Relative risk} 
+\begin{block}{Relative risk}
+\begin{itemize}
+\item The \hl{relative risk}, or \hl{risk ratio}, $RR$
+  is the ratio of the two population proportions $\pi_1/\pi_0$
+\item Estimated by
+\begin{equation}
+\widehat{\mathrm{RR}} = \frac{p_1}{p_0} = \frac{d_1/n_1}{d_0/n_0},\nonumber
+\end{equation}
+where $p_1$ and $p_0$ are the sample proportions in the exposed and
+unexposed groups
+\end{itemize}
+\end{block}
+\end{frame}
+
+%% \begin{frame}
+%% \begin{block}{Example: 16.2 in Kirkwood \& Sterne}
+%%   We have hypothetical data from a \hl{cohort study} to investigate
+%%   the association between smoking and lung cancer. $n_1=30000$
+%%   \hl{smokers} and $n_0=60000$ \hl{non-smokers} were followed
+%%   for a year, during which time $d_1=39$ of the smokers and $d_0=6$ of
+%%   the non-smokers developed lung cancer.
+%% \begin{table}
+%% \begin{tiny}
+%% \begin{tabular}{lccc}
+%% \hline
+%% & \multicolumn{2}{c}{\textbf{Lung cancer}} &
+%% \\
+%% \cline{2-3}
+%% & \textbf{Yes} & \textbf{No} & \textbf{Total}
+%% \\
+%% \hline
+%% \textbf{Smokers (exposed)} & 39 (0.13\%) & 29961 (99.87\%) & 30000 (100\%)
+%% \\
+%% \textbf{Non-smokers (unexposed)} & 6 (0.01\%) & 59994 (99.99\%) & 60000 (100\%)
+%% \\
+%% \hline
+%% \textbf{Total} & 45 (0.05\%) & 89955 (99.95\%) & 90000 (100\%)
+%% \\
+%% \hline
+%% \end{tabular}
+%% \end{tiny}
+%% \end{table}
+%% \end{block}
+%% \end{frame}
+
+%% \begin{frame}
+%% \begin{block}{}
+%% The estimated \hl{risk} of lung cancer among the smokers is:
+%% \begin{equation*}
+%% p_1 = \frac{39}{30000} = 0.0013 = 0.13\%,
+%% \end{equation*}
+%% and the estimated \hl{risk} of lung cancer among the non-smokers is:
+%% \begin{equation*}
+%% p_0 = \frac{6}{60000} = 0.0001 = 0.01\%.
+%% \end{equation*}
+%% Thus the risk of lung cancer was considerably higher among smokers
+%% than non-smokers.
+%% \end{block}
+%% \end{frame}
+
+%% \begin{frame}
+%% \begin{block}{}
+%% The estimated \hl{risk difference} is:
+%% \begin{equation*}
+%% \widehat{\mathrm{RD}} = 0.0013 - 0.0001 = 0.0012 = 0.12\%,
+%% \end{equation*}
+%% and the estimated \hl{relative risk} is:
+%% \begin{equation*}
+%% \widehat{\mathrm{RR}} = \frac{0.0013}{0.0001} = 13.
+%% \end{equation*}
+%% \end{block}
+%% \end{frame}
+
+ \begin{frame}
+ 			  \frametitle{Relative risk} 
+ \begin{block}{Properties of the relative risk}
+ \begin{itemize}
+ \item{$RR = 1$: the risks are the same in the two
+     groups}
+ \item {$RR > 1$: the risk of the outcome is
+     \emph{higher} among those exposed to the risk factor}
+ \item{$RR < 1$:  the risk of the outcome is
+     \emph{lower} among those exposed to the risk factor} 
+     
+ \hspace*{1em}
+ \item The further the relative risk is from 1, the stronger the
+   association between exposure and outcome
+ \end{itemize}
+ \end{block}
+ \end{frame}
+
+
+
+\begin{frame}
+			  \frametitle{Relative risk} 
+\begin{block}{Confidence interval for the relative risk}
+\begin{itemize}
+\item The 95\% \hl{confidence interval} for the relative risk is
+\begin{multline}
+  \text{95\% CI} = \left( \exp \left\{ \log \widehat{\mathrm{RR}} -
+      1.96 \times \mathrm{s.e.} \left( \log \widehat{\mathrm{RR}}
+      \right) \right\}, \right. \\ \left. \exp \left\{ \log
+      \widehat{\mathrm{RR}} + 1.96 \times \mathrm{s.e.} \left( \log
+        \widehat{\mathrm{RR}} \right) \right\} \right),\nonumber
+\end{multline}
+where the estimated \hl{standard error} of the natural logarithm of
+the estimated risk ratio (i.e., the sample ratio) is
+\begin{equation}
+\widehat{\mathrm{s.e.}}(\log \widehat{\mathrm{RR}}) = \sqrt{1/d_1 -
+  1/n_1 + 1/d_0 - 1/n_0} \nonumber
+\end{equation}
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+
+% ----- example 16.2 ----- 
+\begin{frame}
+\begin{block}{Example: 16.2  in Kirkwood \& Sterne}
+	A \hl{cohort study} to investigate the association between smoking
+	and lung cancer. 
+ \begin{table}
+ \begin{tiny}
+ \begin{tabular}{lccc}
+ \hline
+ & \multicolumn{2}{c}{\textbf{Lung cancer}} &
+ \\
+ \cline{2-3}
+ & \textbf{Yes} & \textbf{No} & \textbf{Total}
+ \\
+ \hline
+ \textbf{Smokers (exposed)} & 39 (0.13\%) & 29961 (99.87\%) & 30000 (100\%)
+ \\
+ \textbf{Non-smokers (unexposed)} & 6 (0.01\%) & 59994 (99.99\%) & 60000 (100\%)
+ \\
+ \hline
+ \textbf{Total} & 45 (0.05\%) & 89955 (99.95\%) & 90000 (100\%)
+ \\
+ \hline
+ \end{tabular}
+ \end{tiny}
+ \end{table}
+ 
+ The estimated \hl{risk ratio} is
+\begin{equation*}
+\widehat{\mathrm{RR}} = \frac{0.0013}{0.0001} = 13.
+\end{equation*}
+The estimated \hl{standard error} of the natural logarithm of the
+estimated risk ratio is:
+\begin{equation*}
+\widehat{\mathrm{s.e.}}(\log \widehat{\mathrm{RR}}) = \sqrt{1/39 - 1/30000 + 1/6 - 1/60000} = 0.438
+\end{equation*}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{}
+The 95\% \hl{confidence interval} for the risk ratio is therefore:
+\begin{align*}
+\text{95\% CI} & = \left( \exp \left\{ \log(13)  - 1.96 \times 0.438 \right\}, \right. \\
+& \qquad \left. \exp \left\{ \log(13)  + 1.96 \times 0.438 \right\} \right) \\
+& = (5.5,30.7).
+\end{align*}
+This means that we are 95\% confident that the risk of lung cancer
+among smokers is between 5.5 and 30.7 times larger than the risk of lung cancer
+among non-smokers
+\end{block}
+\end{frame}
+
+%% \begin{frame}
+%% \begin{block}{Test for difference in relative risk}
+%% \begin{itemize}
+%% \item We want to test the \hl{null hypothesis} of no difference
+%%   between the risks in the two groups:
+%% \begin{equation}
+%% \mathrm{H}_0: \mathrm{RR} = 1 \Longleftrightarrow \log \mathrm{RR} = 0.
+%% \end{equation}
+%% \item The \hl{test statistic} is:
+%% \begin{equation}
+%% z = \frac{\log \widehat{\mathrm{RR}}}{\mathrm{s.e.}\left( \log \widehat{\mathrm{RR}} \right)},
+%% \end{equation}
+%% which follows a standard normal distribution when the null hypothesis
+%% is true
+%% \end{itemize}
+%% \end{block}
+%% \end{frame}
+
+%% \begin{frame}
+%% \begin{block}{Example: 16.2 in Kirkwood \& Sterne}
+%%   Once again we return to the smoking and lung cancer example. The
+%%   natural logarithm of the estimated risk ratio is $\log(13)=2.565$.
+%%   The \hl{test statistic} is:
+%% \begin{equation*}
+%% z = \frac{2.565}{0.438} = 5.85.
+%% \end{equation*}
+%% This corresponds to a (two-sided) \hl{$P$-value} of < 0.0001. There
+%% is therefore strong evidence against the null hypothesis that
+%% $\mathrm{RR}=1$
+%% \end{block}
+%% \end{frame}
+
+\begin{frame}
+			  \frametitle{Odds and odds ratio} 
+\begin{block}{Odds}
+\begin{itemize}
+\item The \hl{odds} of an outcome D is defined as
+\begin{equation}
+\mathrm{Odds} = \frac{\mathrm{P}(\text{D happens})}{\mathrm{P}(\text{D does not happen})} = \frac{\mathrm{P}(\mathrm{D})}{1 - \mathrm{P}(\mathrm{D})}\nonumber
+\end{equation}
+\item The odds is estimated by
+\begin{equation}
+\widehat{\mathrm{Odds}} = \frac{p}{1-p} = \frac{d/n}{1-d/n} = \frac{d/n}{h/n} = \frac{d}{h},\nonumber
+\end{equation}
+which is the number of individuals who experience the event divided by
+the number of individuals who \emph{do not} experience the event
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+				  \frametitle{Odds ratio} 
+\begin{block}{Odds ratio}
+\begin{itemize}
+\item The \hl{odds ratio} is denoted by $\mathrm{OR}$ and is the
+  ratio between the odds in the exposed group and the odds in the
+  unexposed group
+\item It is estimated by
+\begin{equation}
+\widehat{\mathrm{OR}} = \frac{d_1/h_1}{d_0/h_0} = \frac{d_1 \times h_0}{d_0 \times h_1},\nonumber
+\end{equation}
+which is also known as the \hl{cross-product ratio} of the $2 \times 2$ table
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+				  \frametitle{Odds ratio} 
+\begin{block}{Properties of the odds ratio}
+\begin{itemize}
+\item $OR$ is one of the most common effect measures in medical
+  statistics, even though it is less intuitive than $RR$
+\item Odds used in for example \hl{logistic regression}
+\item{$OR=1$ occurs when the odds, and hence the proportions,
+    are the same in the two groups}
+\item{The $OR$ is \hl{always further away from 1 than the
+    corresponding $RR$},}
+\item{For \hl{rare outcomes} the $OR$ is approximately equal to
+    the $RR$} 
+\item \hl{OR(disease) = 1/OR(healthy)} (this is not the case for RR)
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+
+% ------ example 16.4
+\begin{frame}
+\begin{block}{Example: 16.4 in Kirkwood \& Sterne}
+  Consider a study in which we monitor the risk of \hl{severe
+    nausea} during chemotherapy for breast cancer. A \hl{new drug}
+  is compared with \hl{standard treatment}
+\begin{table}
+\begin{small}
+\begin{tabular}{lccc}
+\hline
+& \textbf{Number with} & \textbf{Number without} &
+\\
+& \textbf{severe nausea} & \textbf{severe nausea} & \textbf{Total}
+\\
+\hline
+\textbf{New drug} & 88 (88\%) & 12 & 100
+\\
+\textbf{Standard treatment} & 71 (71\%) &  29 & 100
+\\
+\hline
+\end{tabular}
+\end{small}
+\end{table}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{}
+  The estimated \hl{risk} of severe nausea in the group treated
+  with the new drug is
+\begin{equation*}
+p_1 = \frac{88}{100} = 0.880 = 88.0\%,
+\end{equation*}
+and the estimated \hl{risk} of severe nausea in the group given the
+standard treatment is
+\begin{equation*}
+p_0 = \frac{71}{100} = 0.710 = 71.0\%.
+\end{equation*}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{}
+The estimated \hl{relative risk} is
+\begin{equation*}
+\widehat{\mathrm{RR}} = \frac{88/100}{71/100} = 1.239,
+\end{equation*}
+an apparently moderate increase in the prevalence of nausea. The
+estimated \hl{odds ratio} is
+\begin{equation*}
+\widehat{\mathrm{OR}} = \frac{88/12}{71/29} = 2.995,
+\end{equation*}
+a much more dramatic increase
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{}
+  Suppose now that we consider our outcome to be \emph{absence} of
+  nausea. Then the estimated \hl{risk ratio} is:
+\begin{equation*}
+\widehat{\mathrm{RR}} = \frac{12/100}{29/100} = 0.414,
+\end{equation*}
+which means that the proportion of patients without severe nausea has
+more than halved. The estimated \hl{odds ratio} is:
+\begin{equation*}
+\widehat{\mathrm{OR}} = \frac{12/88}{29/71} = 0.334,
+\end{equation*}
+which is exactly the inverse of the odds ratio for nausea (1/2.995=0.334)
+\end{block}
+\end{frame}
+
+
+
+% ------- CI for odds ratio ----
+\begin{frame}
+					  \frametitle{Odds ratio} 
+\begin{block}{Confidence interval for the odds ratio}
+\begin{itemize}
+\item The 95\% \hl{confidence interval} for the odds ratio is
+\begin{multline}
+\text{95\% CI} = \left( \exp \left\{ \log \widehat{\mathrm{OR}} - 1.96 \times \mathrm{s.e.} \left( \log \widehat{\mathrm{OR}} \right) \right\}, \right. \\ \left. \exp \left\{ \log \widehat{\mathrm{OR}} + 1.96 \times \mathrm{s.e.} \left( \log \widehat{\mathrm{OR}} \right) \right\} \right),\nonumber
+\end{multline}
+where the estimated \hl{standard error} of the natural logarithm of the estimated odds ratio (i.e., the sample ratio) is
+\begin{equation}
+\widehat{\mathrm{s.e.}}(\log \widehat{\mathrm{OR}}) = \sqrt{1/d_1 + 1/h_1 + 1/d_0 + 1/h_0},\nonumber
+\end{equation}
+which is also known as \hl{Woolf's formula}
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+
+
+% ------ example 16.3 -----
+\begin{frame}
+\begin{block}{Example: 16.3 in Kirkwood \& Sterne}
+  Consider the survey from Example 15.5 in Kirkwood \& Sterne (2003)
+  of $n=2000$ patients aged 15 to 50 registered with a particular
+  general practice. It showed that $d=138$ (6.9\%) were being treated
+  for asthma.
+\begin{table}
+\begin{normalsize}
+\begin{tabular}{lccc}
+\hline
+& \multicolumn{2}{c}{\textbf{Asthma}} &
+\\
+\cline{2-3}
+& \textbf{Yes} & \textbf{No} & \textbf{Total}
+\\
+\hline
+\textbf{Women} & 81 & 995 & 1076
+\\
+\textbf{Men} & 57 & 867 & 924
+\\
+\hline
+\textbf{Total} & 138 & 1862 & 2000
+\\
+\hline
+\end{tabular}
+\end{normalsize}
+\end{table}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Example: 16.3 in Kirkwood \& Sterne}
+  The estimated \hl{prevalences} of asthma (proportions with
+  asthma) in women and men are:
+\begin{equation*}
+p_1 = \frac{81}{1076} = 0.0753 = 7.53\%
+\end{equation*}
+and
+\begin{equation*}
+p_0 = \frac{57}{924} = 0.0617 = 6.17\%,
+\end{equation*}
+respectively. The estimated \hl{risk ratio} is:
+\begin{equation*}
+\widehat{\mathrm{RR}} = \frac{0.0753}{0.0617} = 1.220.
+\end{equation*}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Example: 16.3 in Kirkwood \& Sterne}
+The estimated \hl{odds} of asthma in women and men are:
+\begin{equation*}
+\frac{p_1}{h_1} = \frac{81}{995} = 0.0814
+\end{equation*}
+and
+\begin{equation*}
+\frac{p_0}{h_0} = \frac{57}{867} = 0.0657,
+\end{equation*}
+respectively. The estimated \hl{odds ratio} is:
+\begin{equation*}
+\widehat{\mathrm{OR}} = \frac{0.0814}{0.0657} = 1.238.
+\end{equation*}
+The estimated odds ratio of 1.238 indicates that asthma is more common
+among women than men.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Example: 16.3 in Kirkwood \& Sterne}
+  We consider the data from the \hl{asthma survey} in Example 15.5
+  and Example 16.3 in Kirkwood \& Sterne (2003). The estimated
+  \hl{standard error} of the natural logarithm of the estimated
+  odds ratio is given by
+\begin{equation*}
+\widehat{\mathrm{s.e.}}(\log \widehat{\mathrm{OR}}) = \sqrt{1/81 + 1/995 + 1/57 + 1/867} = 0.179
+\end{equation*}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{}
+The 95\% \hl{confidence interval} for the odds ratio is therefore:
+\begin{align*}
+\text{95\% CI} & = ( \exp \left\{ \log(1.238)  - 1.96 \times 0.179 \right\},  \\
+& \qquad \left. \exp \left\{ \log(1.238)  + 1.96 \times 0.179 \right\} \right) \\
+& = (0.872,1.758)
+\end{align*}
+This means that with 95\% confidence, the odds ratio in the population
+lies between 0.872 and 1.758
+\end{block}
+\end{frame}
+
+%% \begin{frame}
+%% \begin{block}{Testing on the odds ratio}
+%% \begin{itemize}
+%% \item We want to test the \hl{null hypothesis} of no difference
+%%   between the risks in the two groups:
+%% \begin{equation}
+%% \mathrm{H}_0: \mathrm{OR} = 1 \Longleftrightarrow \log \mathrm{OR} = 0.
+%% \end{equation}
+%% \item The \hl{test statistic} is
+%% \begin{equation}
+%% z = \frac{\log \widehat{\mathrm{OR}}}{\mathrm{s.e.}\left( \log \widehat{\mathrm{OR}} \right)},
+%% \end{equation}
+%% which follows a standard normal distribution when the null hypothesis is true
+%% \end{itemize}
+%% \end{block}
+%% \end{frame}
+
+%% \begin{frame}
+%% \begin{block}{Example: 16.3 in Kirkwood \& Sterne}
+%%   Once again we return to the \hl{asthma survey}. The natural
+%%   logarithm of the estimated odds ratio is $\log(1.238)=0.213$. The
+%%   \hl{test statistic} is
+%% \begin{equation*}
+%% z = \frac{0.213}{0.179} = 1.190.
+%% \end{equation*}
+%% This corresponds to a (two-sided) \hl{$P$-value} of 0.234. There is
+%% therefore no clear evidence against the null hypothesis that
+%% $\mathrm{OR}=1$, i.e. that the prevalence of asthma is the same in men
+%% and women
+%% \end{block}
+%% \end{frame}
+
+\section{Summary}
+
+\frame{ 
+\frametitle{Summary}
+  \begin{block}{Key words}
+    \begin{itemize}
+    \item Proportions
+    \item z-tests
+    \item Risk difference
+    \item Relative risk (RR) and odds ratio (OR)
+    \end{itemize}
+  \end{block}
+  \begin{block}{Notation}
+    \begin{itemize}
+    \item $\pi, p$
+    \item $n, d, h$
+    \end{itemize}
+  \end{block}
+  \begin{block}{Next lecture}
+    \begin{itemize}
+    \item More on proportions - then by chi-square tests
+    \end{itemize}
+  \end{block}
+}
+
+\end{document}
+
