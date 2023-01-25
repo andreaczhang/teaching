@@ -2,3 +2,13 @@
 .Rhistory
 .RData
 .Ruserdata
+*.pdf
+*.aux
+*.log
+*.synctex.gz
+*.nav
+*.out
+*.snm
+*.vrb
+*.toc
+MF9130/stata/*
