@@ -14,11 +14,9 @@ Stochastic independence
 
 # Day 2
 
-### <span style = 'color:tomato'>Total probability, Bayes law 9:30-10:10 (40m) </span>
+### <span style = 'color:tomato'>Total probability, Bayes law 9:30-10:00 (30m) </span>
 
-conditional probability revision
-
-total probability, notations and venn graph
+Probability concepts via counting squares (visualisation)
 
 Bayes theorem
 
@@ -26,7 +24,7 @@ Intro to Bayesian statistics
 
 
 
-### Diagnostic tests 10:15-11:00 (45m)
+### Diagnostic tests 10:05-11:00 (55m)
 
 Diagnostic testing intro
 
@@ -34,7 +32,7 @@ Concepts (sens, spec, ...)
 
 Examples: mammography
 
-Computation of PPV, prevalence effect 
+Computation of PPV, prevalence effect, connection to bayes theorem
 
 Example: HIV testing
 
