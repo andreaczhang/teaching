@@ -1,4 +1,25 @@
 library(magrittr)
+
+# ex 8, 10, 11 ----
+
+milk <- c(6.3, 6.9, 3.0, 3.8, 4.7, 4.6, 3.0, 3.3, 3.6,
+          1.2, 1.1, 3.6, 3.3, 9.4, 5.6, 3.0)
+
+hist(milk)
+
+mean(milk)
+median(milk)
+sd(milk)
+
+
+sqrt((15*2.1^2 + 15*1.2^2)/30)
+
+(4.15 - 2.59)/1.71/sqrt(1/8)
+pt(2.58, df = 30, lower.tail = F)
+
+
+# data: normal, skewed ----
+
 x0 <- rnorm(n = 1000, 0, 1)
 hist(x0, main = 'Normal (standard) data')
 #abline(v = mean(x0), col = 'red', lwd = 2)
@@ -42,7 +63,7 @@ sd(x2)
 
 
 
-# birth
+# birth ----
 install.packages('haven')
 birth <- haven::read_dta(file = './MF9130/stata/data/birth.dta')
 birth <- data.table::data.table(birth)
@@ -57,7 +78,7 @@ plot(log(birth$lwt), birth$bwt)
 plot(birth$age, birth$bwt)
 
 
-# lung
+# lung -----
 pef <- haven::read_dta(file = './MF9130/stata/data/PEFH98-english.dta')
 pef <- data.table::data.table(pef)
 pef
@@ -78,6 +99,32 @@ qqline(pef_f, col = 'steelblue', lwd = 2)
 
 qqnorm(pef_m, pch = 20, frame = F)
 qqline(pef_m, col = 'steelblue', lwd = 2)
+
+
+
+# non para tests ----
+# x1 <- c(110, 122, 125, 120, 140, 124, 123, 137, 135, 145)
+# x2 <- c(125, 115, 130, 140, 140, 115, 140, 125, 140, 135)
+
+x1 <- c(5260, 5470, 5640, 6180, 6390, 6515,
+        6805, 7515, 7515, 8230, 8770)
+
+x2 <- c(3910, 4220, 3885, 5160, 5645, 4680,
+        5265, 5975, 6790, 6900, 7335)
+# one sample: wilcoxon signed rank
+# wilcox.test()
+
+
+# paired sample: wilcoxon matched pairs
+wilcox.test(x1,x2, paired = T)
+?wilcox.test
+
+# independent two samples: mann-whitney
+wilcox.test(x, y)
+
+
+
+
 
 
 
