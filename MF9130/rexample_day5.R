@@ -64,14 +64,23 @@ sd(x2)
 
 
 # birth ----
-install.packages('haven')
+# install.packages('haven')
 birth <- haven::read_dta(file = './MF9130/stata/data/birth.dta')
 birth <- data.table::data.table(birth)
 birth
+# lwt
 hist(birth$lwt, breaks = 20, main = 'LWT: Weight in pounds at last menstrual period')
-hist(log(birth$lwt))
+hist(log(birth$lwt), main = 'log(LWT)')
 
+qqnorm(birth$lwt, pch = 20, main = 'Q-Q plot: LWT')
+qqline(birth$lwt, col = 'steelblue', lwd = 2)
+
+
+# bwt
 hist(birth$bwt, breaks = 20, main = 'BWT: Birth weight in grams')
+
+qqnorm(birth$bwt, pch = 20, main = 'Q-Q plot: BWT')
+qqline(birth$bwt, col = 'steelblue', lwd = 2)
 
 plot(birth$lwt, birth$bwt)
 plot(log(birth$lwt), birth$bwt)
@@ -124,7 +133,13 @@ wilcox.test(x, y)
 
 
 
+# log -----
 
-
-
-
+xx <- seq(0, 100, by = 0.1)
+xx[1] <- xx[1] + 0.05
+head(xx)
+xxlog <- log(xx)
+plot(xx, xxlog, type = 'l', main = c('Log transformation'),
+     xlab = 'X', ylab = 'Log(X)')
+abline(h = 0, col = 'red')
+# abline(v = 1, col = 'red', 'dashed')
