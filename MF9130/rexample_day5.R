@@ -25,8 +25,9 @@ hist(x0, main = 'Normal (standard) data')
 #abline(v = mean(x0), col = 'red', lwd = 2)
 #abline(v = median(x0), col = 'blue', lwd = 2)
 
+x0 <- x0 -10
 qqnorm(x0, pch = 20, main = 'Q-Q plot: normal data')
-qqline(x0, col = 'steelblue', lwd = 2)
+qqline(x0, col = 'red', lwd = 2)
 
 # heavy tailed (more likely to take more extreme values)
 xt <- rt(n = 1000, df = 5)
