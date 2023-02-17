@@ -2,7 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
-*.pdf
+
 *.aux
 *.log
 *.synctex.gz
@@ -12,3 +12,8 @@
 *.vrb
 *.toc
 MF9130/stata/*
+MF9130/v20_lectures/*
+MF9130/v23/exam_v23/*
+MF9130/v23/upload_canvas/*
+
+ERN4110/h22/*
