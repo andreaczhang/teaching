@@ -3,8 +3,9 @@
 
 
 library(ggplot2)
-install.packages('gapminder')
+# install.packages('gapminder')
 library(gapminder)
+
 head(gapminder)
 
 # 6 variables
@@ -19,9 +20,16 @@ p
 
 
 
+
 # __________ ----
 
 # visualize over time
+
+p <- ggplot(data = gapminder,
+            mapping = aes(x = year,
+                          y = lifeExp))
+p <- p + geom_point()
+p
 
 # 2. color aes (group) ----
 
@@ -63,8 +71,9 @@ p <- ggplot(data = gapminder,
 p <- p + geom_line()
 p <- p + geom_point()
 p
-
-
+# install.packages('RColorBrewer')
+# library(RColorBrewer)
+# p + scale_color_brewer(palette = "Dark2")
 
 
 # __________ ----
@@ -81,7 +90,15 @@ p <- p + facet_wrap( ~ country)
 p
 
 
+p + theme_bw()
+p + theme_minimal()
 
+
+p <- ggplot(data = americas, mapping = aes(x = year, y = lifeExp))
+p <- p + geom_line()
+p <- p + facet_wrap( ~ country)
+# p <- p + theme(axis.text.x = element_text(angle = 45))
+p
 
 
 # 5. text -----
@@ -100,6 +117,22 @@ p <- p + labs(
 )
 p
 
+
+# change size ----
+# both axes
+p + theme(axis.text = element_text(size = 15))
+
+# this changes x axis text size
+p + theme(axis.text.x = element_text(size = 15))
+
+# axis title size
+p + theme(axis.title = element_text(size = 15))
+
+# title text size
+p + theme(plot.title = element_text(size = 20))
+
+# facet size
+p + theme(strip.text = element_text(size = 10))
 
 
 # 6. statistics ----
@@ -136,16 +169,16 @@ gapminder %>%
 
 # with mutate()
 
-gapminder %>%
-  # extract first letter of country name into new column
-  mutate(startsWith = substr(country, 1, 1)) %>%
-  # only keep countries starting with A or Z
-  filter(startsWith %in% c("A", "Z")) %>%
-  # plot lifeExp into facets
-  ggplot(aes(x = year, y = lifeExp, colour = continent)) +
-  geom_line() +
-  facet_wrap(vars(country)) +
-  theme_minimal()
+# gapminder %>%
+#   # extract first letter of country name into new column
+#   mutate(startsWith = substr(country, 1, 1)) %>%
+#   # only keep countries starting with A or Z
+#   filter(startsWith %in% c("A", "Z")) %>%
+#   # plot lifeExp into facets
+#   ggplot(aes(x = year, y = lifeExp, colour = continent)) +
+#   geom_line() +
+#   facet_wrap(vars(country)) +
+#   theme_minimal()
 
 
 # ____________ ----
