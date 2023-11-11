@@ -144,3 +144,21 @@ plot(xx, xxlog, type = 'l', main = c('Log transformation'),
      xlab = 'X', ylab = 'Log(X)')
 abline(h = 0, col = 'red')
 # abline(v = 1, col = 'red', 'dashed')
+
+
+
+# mens data -----
+pre <- c(5260, 5470, 5640, 6180,
+         6390, 6515, 6805, 7515,
+         7515, 8230, 8770)
+
+post <- c(3910, 4220, 3884, 6320,
+          5645, 4680, 5265, 5975,
+          6790, 6900, 7336)
+d_mens <- data.frame(pre = pre,
+                     post = post,
+                     diff = pre - post)
+d_mens
+write_dta(d_mens, "~/Documents/GitHub/teaching/MF9130/stata/data/mens.dta")
+
+
