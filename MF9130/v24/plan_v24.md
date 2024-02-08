@@ -12,13 +12,13 @@ Probability, Bayes law, sensitivity specificity, ROC
 
 # Day 3
 
-8:30 - 10:30 hypothesis tests, ci, one sample t-test
+8:30 - 10:30 hypothesis tests, ci, intro to tests
 
 10:45 - 11:30 <span style = 'color:orange'>STATA session (exercise 1 normal dist, 2 heart data)</span>
 
 
 
-12:30 - 13:45 two sample t-test, ci
+12:30 - 13:45 one sample t-test, two sample t-test, ci
 
 14:00 - 16:00 <span style = 'color:orange'>exercise (exercise 3: pef data)</span>
 
