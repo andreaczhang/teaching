@@ -17,17 +17,7 @@
 
 exams/*
 
-MF9130/admin/*
-MF9130/stata/*
-MF9130/v20/*
-MF9130/v23/upload_canvas/*
-MF9130/all_material_MF9130/*
-
-
-MF9130E/all_material_MF9130E/*
-MF9130E/upload_canvas/*
-
-ERN4110/h22/*
-
-
-MF9155/*
+MF9130/*
+MF9130E/*
+ERN4110/*
+MED3007/*
